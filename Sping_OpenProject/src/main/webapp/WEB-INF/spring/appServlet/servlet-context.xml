@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+	<!-- CSS 폴더 등록 -->
+	<resources mapping="/css/**" location="/css/" />
+	<!-- uploadFile/memberPhoto 폴더의 이미지 폴더로 등록 -->
+	<resources mapping="/uploadFile/**" location="/uploadFile/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<context:component-scan base-package="com.bitcamp.openproject" />
+	
+	<!-- 파일업로드 처리를 위한 multipartResolver bean 등록 -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="defaultEncoding">
+         	<beans:value>utf-8</beans:value>
+         </beans:property>
+   </beans:bean>
+   
+	<!-- 로그인 체크 인터셉터 --> 
+	<interceptors>
+		<interceptor>
+			<mapping path="/mypage" /> 
+			<beans:bean class="com.bitcamp.interceptor.AuthCheckInterceptor" />		
+		</interceptor>
+		
+		<interceptor>
+			<mapping path="/myboard" /> 
+			<beans:bean class="com.bitcamp.interceptor.AuthCheckInterceptor" />		
+		</interceptor>
+	</interceptors>
+	
+	<!-- MemberDao 등록 -->
+	<beans:bean id="memberDao" class="com.bitcamp.dao.MemberDao" />
+	
+	<!-- 회원가입 서비스 등록 -->
+	<beans:bean id="registerService" class="com.bitcamp.service.RegisterService" />
+	
+	<!-- 로그인 서비스 등록 -->
+	<beans:bean id="loginService" class="com.bitcamp.service.LoginService" />
+	
+	<!-- 마이페이지 서비스 등록 -->
+	<beans:bean id="myPageService" class="com.bitcamp.service.MyPageService" />
+	
+	<!-- 게시판 목록 서비스 등록 -->
+	<beans:bean id="getBoardListService" class="com.bitcamp.service.GetBoardListService" />
+	
+	<!-- 게시판 글 쓰기 등록 -->
+	<beans:bean id="writeService" class="com.bitcamp.service.WriteService" />
+	
+	<!-- 게시판 글 수정 등록 -->
+	<beans:bean id="editService" class="com.bitcamp.service.EditService" />
+	
+	<!-- 게시판 글 삭제 등록 -->
+	<beans:bean id="deleteService" class="com.bitcamp.service.DeleteService" />
+	
+	<!-- JdbcTemplateMemberDao 등록 -->
+	<beans:bean id="jdbcTemplateMemberDao" class="com.bitcamp.dao.JdbcTemplateMemberDao" />
+	
+	<!-- JdbcTemplateBoardDao 등록 -->
+	<beans:bean id="jdbcTemplateBoardDao" class="com.bitcamp.dao.JdbcTemplateBoardDao" />
+	
+	<!-- MyBatisMemberDao 등록 -->
+	<beans:bean id="myBatisMemberDao" class="com.bitcamp.dao.MyBatisMemberDao" />
+	
+	<!-- DataSource 등록 : JdbcTemplate에 주입(MyBatis) -->
+	<beans:bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<beans:property name="driverClass" value="oracle.jdbc.driver.oracleDriver" />
+		<beans:property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<beans:property name="user" value="system" />
+		<beans:property name="password" value="1234" />
+	</beans:bean>
+	
+	<!-- SqlSessionFactory 등록 : spring + mybatis 연동 설정 -->
+	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="mapperLocations" value="classpath:com/bitcamp/mapper/*.xml" />
+	</beans:bean>
+	
+	<!-- SqlSessionTemplate 등록  -->
+	<beans:bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg ref="sqlSessionFactory" />
+	</beans:bean>
+	
+	<!-- JdbcTemplate 등록 : DAO에 주입 -->
+	<beans:bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" p:dataSource-ref="dataSource">
+		<!-- <beans:property name="dataSource" ref="dataSource"/> -->
+	</beans:bean>
+	
+	<!-- PlatformTransactionManager 빈 설정 --> 
+	<beans:bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> 
+		<beans:property name="dataSource" ref="dataSource" /> 
+	</beans:bean> 
+	
+	<!-- @Transactional 애노테이션 활성화 설정 --> 
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+</beans:beans>
