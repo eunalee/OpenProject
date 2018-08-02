@@ -132,8 +132,10 @@ public class MyBoardController {
 	}
 	
 	@RequestMapping(value="/edit", method=RequestMethod.POST)
-	public String edit(HttpServletRequest request, HttpSession session, Model model) throws Exception {
-		int resultCnt = editService.edit(Integer.parseInt(request.getParameter("board_id")), request.getParameter("title"), request.getParameter("content"));
+	public String edit(HttpServletRequest request, HttpSession session, BoardInfo boardInfo, Model model) throws Exception {
+		//int resultCnt = editService.edit(Integer.parseInt(request.getParameter("board_id")), request.getParameter("title"), request.getParameter("content"));
+		
+		int resultCnt = editService.edit(boardInfo);
 		
 		if(resultCnt > 0) {
 			MemberInfo member = (MemberInfo)session.getAttribute("memberInfo");

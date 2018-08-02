@@ -11,6 +11,12 @@ public class MemberInfo {
 	private String month;
 	private String day;
 	private String gender;
+	
+	//select 생일값
+	private String birthdate;
+	//insert 생일값
+	private String birthdate2;
+	
 	private String email;
 	private String phone;
 	
@@ -74,6 +80,16 @@ public class MemberInfo {
 
 	public void setDay(String day) {
 		this.day = day;
+	}
+
+	//select 생일값
+	public String getBirthdate() {
+		return birthdate;
+	}
+	
+	//insert 생일값
+	public String getBirthdate2() {
+		return year + "-" + month + "-" + day;
 	}
 
 	public String getGender() {

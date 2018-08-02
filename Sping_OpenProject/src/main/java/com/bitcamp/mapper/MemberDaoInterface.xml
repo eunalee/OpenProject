@@ -4,13 +4,15 @@
 <mapper namespace="com.bitcamp.dao.MemberDaoInterface">
 
 	<select id="selectById" resultType="com.bitcamp.model.MemberInfo">
-		select * from member where id = #{ id }
+		select id, password, name, to_char(birthdate, 'YYYY-MM-DD') birthdate, gender, email, substr(phone, 1,3) || '-'  || substr(phone, 4,4) || '-'  || substr(phone, 8,4) phone, photoName 
+		from member 
+		where id=#{id}
 	</select>
 	
-	<insert id="insertMember" parameterType="com.bitcamp.model.MemberInfo">
+	<insert id="insert" parameterType="com.bitcamp.model.MemberInfo">
 		insert into member 
 		(id, password, name, birthdate, gender, email, phone, photoName) 
-		values (#{ id }, #{ password }, #{ name }, #{ birthdate }, #{ gender }, #{ email }, #{ phone }, #{ photoName })
+		values (#{id}, #{password}, #{name}, #{birthdate2}, #{gender}, #{email}, #{phone}, #{photoName})
 	</insert>
 	
 </mapper>

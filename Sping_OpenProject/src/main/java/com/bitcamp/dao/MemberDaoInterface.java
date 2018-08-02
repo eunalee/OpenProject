@@ -4,5 +4,5 @@ import com.bitcamp.model.MemberInfo;
 
 public interface MemberDaoInterface {
 	public MemberInfo selectById(String userId);
-	public void inserMember(MemberInfo memberInfo);
+	public int insert(MemberInfo memberInfo);
 }

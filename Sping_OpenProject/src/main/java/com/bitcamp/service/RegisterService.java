@@ -5,18 +5,27 @@ import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.bitcamp.dao.JdbcTemplateMemberDao;
+import com.bitcamp.dao.MemberDaoInterface;
+import com.bitcamp.dao.MyBatisMemberDao;
 import com.bitcamp.model.MemberInfo;
 
 
 public class RegisterService {
+/*	@Autowired
+	JdbcTemplateMemberDao memberDao;*/
+	
 	@Autowired
-	JdbcTemplateMemberDao memberDao;
+	MyBatisMemberDao memberDao;
+	
+/*	@Autowired
+	private SqlSessionTemplate template;
+	
+	private MemberDaoInterface memberDao;*/
 
 	//@Transactional //이 안에서 실행되는 트랜잭션처리가 서버에 적용되지 않도록
 	public int register(MemberInfo memberInfo, HttpServletRequest request) throws Exception {
+		//memberDao = template.getMapper(MemberDaoInterface.class);
 		//int result = 0;
 		//Connection conn = null;
 		

@@ -6,12 +6,20 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bitcamp.dao.JdbcTemplateBoardDao;
+import com.bitcamp.dao.MyBatisBoardDao;
 import com.bitcamp.model.BoardInfo;
 
 public class GetBoardListService {
+/*	@Autowired
+	JdbcTemplateBoardDao boardDao;*/
+	
 	@Autowired
-	JdbcTemplateBoardDao boardDao;
+	MyBatisBoardDao boardDao;
+	
+/*	@Autowired
+	private SqlSessionTemplate template;
+	
+	private BoardDaoInterface boardDao;*/
 	
 	private static final int BOARD_COUNT_PER_PAGE = 5;
 	

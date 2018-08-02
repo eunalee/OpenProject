@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bitcamp.mapper.BoardMapper">
+
+	<select id="selectCount" resultType="int">
+		select count(*) from board where writer_id=#{id}
+	</select>
+	
+	<select id="selectById" resultType="com.bitcamp.model.BoardInfo">
+		select board_id, title, content, writedate from board where board_id=#{id}
+	</select>
+	
+	<select id="selectAll" resultType="com.bitcamp.model.BoardInfo">
+		select board_id, title, content, writedate
+			from (select rownum rnum, board_id, title, content, to_char(writedate, 'YYYY-MM-DD') writedate
+			from (select * from board where writer_id=#{id} order by board_id desc)
+			<![CDATA[ where rownum <= #{endRow}) ]]> 
+			<![CDATA[ where rnum >= #{firstRow} ]]> 
+	</select>
+	
+	<insert id="insert" parameterType="com.bitcamp.model.BoardInfo">
+		insert into board (board_id, writer_id, title, content, writedate) 
+		values (board_id_seq.NEXTVAL, #{writer_id}, #{title}, #{content}, sysdate)
+	</insert>
+	
+	<update id="update" parameterType="com.bitcamp.model.BoardInfo">
+		update board set title=#{title}, content=#{content} 
+		where board_id=#{board_id}
+	</update>
+	
+	<delete id="delete" parameterType="com.bitcamp.model.BoardInfo">
+		delete from board where board_id=#{board_id}
+	</delete>
+
+</mapper>

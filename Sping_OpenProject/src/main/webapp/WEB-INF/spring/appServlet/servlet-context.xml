@@ -28,6 +28,15 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
+	<!-- InternalResourceViewResolver에 등록되지 않은 뷰가 viewResulver를 참조하도록 함 -->
+	<beans:bean id="viewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="1"/>
+	
+	<!-- 엑셀 출력 커스텀 뷰 등록 -->
+	<beans:bean id="MeberListXls" class="com.bitcamp.openproject.MemberListXlsView"/>
+	
+	<!-- PDF 출력 커스텀 뷰 등록 -->
+	<beans:bean id="MeberListPdf" class="com.bitcamp.openproject.MemberListPdfView"/>
+	
 	<context:component-scan base-package="com.bitcamp.openproject" />
 	
 	<!-- 파일업로드 처리를 위한 multipartResolver bean 등록 -->
@@ -44,11 +53,14 @@
 			<beans:bean class="com.bitcamp.interceptor.AuthCheckInterceptor" />		
 		</interceptor>
 		
-		<interceptor>
+ 		<interceptor>
 			<mapping path="/myboard" /> 
 			<beans:bean class="com.bitcamp.interceptor.AuthCheckInterceptor" />		
 		</interceptor>
 	</interceptors>
+	
+	<!-- 회원 리스트 등록 -->
+	<beans:bean id="getMemberListService" class="com.bitcamp.service.GetMemberListService" />
 	
 	<!-- MemberDao 등록 -->
 	<beans:bean id="memberDao" class="com.bitcamp.dao.MemberDao" />
@@ -82,6 +94,9 @@
 	
 	<!-- MyBatisMemberDao 등록 -->
 	<beans:bean id="myBatisMemberDao" class="com.bitcamp.dao.MyBatisMemberDao" />
+	
+	<!-- MyBatisBoardDao 등록 -->
+	<beans:bean id="myBatisBoardDao" class="com.bitcamp.dao.MyBatisBoardDao" />
 	
 	<!-- DataSource 등록 : JdbcTemplate에 주입(MyBatis) -->
 	<beans:bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
